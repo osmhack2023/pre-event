@@ -1,46 +1,68 @@
-var swiper = new Swiper(".mySwiper", {
-  slidesPerView: 1,
-  spaceBetween: 30,
-  loop: true,
-  autoplay: {
-    delay: 3000,
-  }
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-});
+// var swiper = new Swiper(".mySwiper", {
+//   slidesPerView: 1,
+//   spaceBetween: 30,
+//   loop: true,
+//   autoplay: {
+//     delay: 3000,
+//   }
+//   pagination: {
+//     el: ".swiper-pagination",
+//     clickable: true,
+//   },
+//   navigation: {
+//     nextEl: ".swiper-button-next",
+//     prevEl: ".swiper-button-prev",
+//   },
+// });
 
 // timer
-let countDownDate = newDate("May 29, 2023 00:00").getTime();
+let days = document.getElementById('days');
+let hours = document.getElementById('hours');
+let minutes = document.getElementById('minutes');
+
+let dd = document.getElementById('dd');
+let hh = document.getElementById('hh');
+let mm = document.getElementById('mm');
+
+let day_dot = document.querySelector('.day_dot');
+let hr_dot = document.querySelector('.hr_dot');
+let min_dot = document.querySelector('.min_dot');
+
+let endDate = 'July 12 2023 00:00:00';
+// date format mm/dd/yyyy
+
 let x = setInterval(function () {
-  let now = newDate().getTime();
-  let distance = countDownDate - now;
+  let now = new Date(endDate).getTime();
+  let countDown = new Date().getTime();
+  let distance = now - countDown;
 
-  let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  console.log(days);
-  let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  console.log(hours);
-  let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  console.log(minutes);
+  // time calculation 
+  let d = Math.floor(distance / (1000 * 60 * 60 * 24));
+  let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 
-  document.getElementById("days").innerHTML = days;
-  document.getElementById("hr").innerHTML = hours;
-  document.getElementById("min").innerHTML = minutes;
+  // output
+  days.innerHTML = d + "<br><span>Days<span>";
+  hours.innerHTML = h + "<br><span>Hours<span>";
+  minutes.innerHTML = m + "<br><span>Min<span>";
 
-  if (distance > 0) {
+  // animation stroke
+  dd.style.strokeDashoffset = 440 - (440 * d) / 365;
+  hh.style.strokeDashoffset = 440 - (440 * h) / 24;
+  mm.style.strokeDashoffset = 440 - (440 * m) / 60;
+
+  // animate circle dots
+  day_dot.style.transform = `rotateZ(${d * 0.986}deg)`;
+  //360deg/365days = 0.986
+  hr_dot.style.transform = `rotateZ(${h * 15}deg)`;
+  //360deg/24hr = 15
+  min_dot.style.transform = `rotateZ(${m * 6}deg)`;
+  //360deg/60min = 6
+
+  // if countdown is over deadline
+  if (distance < 0) {
     clearInterval(x);
-    document.getElementById("days").innerHTML = "00";
-    document.getElementById("hr").innerHTML = "00";
-    document.getElementById("min").innerHTML = "00";
+    document.getElementById("time").style.display = 'none';
+    document.querySelector(".end").style.display = 'block';
   }
-
-}, 1000);
-
-
-
-
+}, 1000)
